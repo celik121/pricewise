@@ -1,11 +1,9 @@
-"use server"
-
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { extractCurrency, extractDescription, extractPrice } from '../utils';
 
 export async function scrapeAmazonProduct(url: string) {
-  if(!url) return;
+  if (!url) return;
 
   // BrightData proxy configuration
   const username = String(process.env.BRIGHT_DATA_USERNAME);
@@ -21,10 +19,10 @@ export async function scrapeAmazonProduct(url: string) {
     host: 'brd.superproxy.io',
     port,
     rejectUnauthorized: false,
-  }
+  };
 
   try {
-    // Fetch the product page
+    // Fetch the product page using the BrightData proxy
     const response = await axios.get(url, options);
     const $ = cheerio.load(response.data);
 
@@ -32,8 +30,11 @@ export async function scrapeAmazonProduct(url: string) {
     const title = $('#productTitle').text().trim();
     const currentPrice = extractPrice(
       $('.priceToPay span.a-price-whole'),
-      $('.a.size.base.a-color-price'),
+      $('.a-price .a-price-whole'),
+      $('.a-price.a-text-price span.a-offscreen'),
       $('.a-button-selected .a-color-base'),
+      $('#priceblock_dealprice .a-price .a-price-whole'),
+      $('#priceblock_ourprice .a-price .a-price-whole')
     );
 
     const originalPrice = extractPrice(
@@ -41,22 +42,25 @@ export async function scrapeAmazonProduct(url: string) {
       $('.a-price.a-text-price span.a-offscreen'),
       $('#listPrice'),
       $('#priceblock_dealprice'),
-      $('.a-size-base.a-color-price')
+      $('.a-size-base.a-color-price'),
+      $('#priceblock_saleprice'),
+      $('.priceBlockStrikePriceString'),
+      $('.a-color-price')
     );
 
     const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
 
-    const images = 
-      $('#imgBlkFront').attr('data-a-dynamic-image') || 
+    const images =
+      $('#imgBlkFront').attr('data-a-dynamic-image') ||
       $('#landingImage').attr('data-a-dynamic-image') ||
-      '{}'
+      '{}';
 
     const imageUrls = Object.keys(JSON.parse(images));
 
-    const currency = extractCurrency($('.a-price-symbol'))
-    const discountRate = $('.savingsPercentage').text().replace(/[-%]/g, "");
+    const currency = extractCurrency($('.a-price-symbol'));
+    const discountRate = $('.savingsPercentage').text().replace(/[-%]/g, '');
 
-    const description = extractDescription($)
+    const description = extractDescription($);
 
     // Construct data object with scraped information
     const data = {
@@ -69,14 +73,14 @@ export async function scrapeAmazonProduct(url: string) {
       priceHistory: [],
       discountRate: Number(discountRate),
       category: 'category',
-      reviewsCount:100,
+      reviewsCount: 100,
       stars: 4.5,
       isOutOfStock: outOfStock,
       description,
       lowestPrice: Number(currentPrice) || Number(originalPrice),
       highestPrice: Number(originalPrice) || Number(currentPrice),
       averagePrice: Number(currentPrice) || Number(originalPrice),
-    }
+    };
 
     return data;
   } catch (error: any) {
