@@ -12,6 +12,7 @@
 @layer base {
   body {
     @apply font-inter;
+    @apply bg-black text-white;
   }
 }
 
@@ -29,7 +30,7 @@
   }
 
   .small-text {
-    @apply flex gap-2 text-sm font-medium text-primary;
+    @apply flex justify-center gap-2 text-2xl text-white relative top-[-70px]; 
   }
 
   .paragraph-text {
@@ -116,7 +117,7 @@
   }
 
   .nav-logo {
-    @apply font-spaceGrotesk text-[21px] text-secondary font-bold;
+    @apply font-spaceGrotesk text-[21px] text-white font-bold;
   }
 
   /* PRICE INFO */
@@ -150,3 +151,4 @@
     @apply bg-gray-900 border border-gray-900 rounded-lg shadow-xs px-5 py-3 text-white text-base font-semibold hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40;
   }
 }
+
