@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { scrapeAndStoreProduct } from '@/lib/actions';
 import { FormEvent, useState } from 'react';
@@ -27,10 +27,10 @@ const isValidAmazonProductURL = (url: string) => {
 const Searchbar = () => {
   const [searchPrompt, setSearchPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isFocused, setIsFocused] = useState(false); // Keep track of focus state
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent default form submission (page reload)
+    event.preventDefault();
 
     const isValidLink = isValidAmazonProductURL(searchPrompt);
 
@@ -39,7 +39,6 @@ const Searchbar = () => {
     try {
       setIsLoading(true);
       const product = await scrapeAndStoreProduct(searchPrompt);
-      // Keep focus after submission
       setIsFocused(true);
     } catch (error) {
       console.log(error);
@@ -49,23 +48,27 @@ const Searchbar = () => {
   };
 
   const handleBack = () => {
-    setIsFocused(false); // Go back to original state
+    setIsFocused(false);
+  };
+
+  const handleFocusWithDelay = () => {
+    setTimeout(() => {
+      setIsFocused(true);
+    }, 500); // Delays the focus effect by 0.5 seconds
   };
 
   return (
     <>
-      {/* Overlay: Covers the background when search is focused */}
       {isFocused && (
         <div className="fixed inset-0 bg-black opacity-100 z-10"></div>
       )}
 
       <motion.div
         initial={{ y: 0 }}
-        animate={isFocused ? { y: -150 } : { y: 0 }} // Transition up when focused
-        transition={{ type: 'tween', duration: 0.1 }} // Smooth transition
+        animate={isFocused ? { y: -150 } : { y: 0 }}
+        transition={{ type: 'tween', duration: 0.1 }}
         className="relative z-20"
       >
-        {/* Back Button */}
         {isFocused && (
           <button 
             onClick={handleBack} 
@@ -75,29 +78,26 @@ const Searchbar = () => {
           </button>
         )}
 
-        {/* Search Bar */}
         <form 
           className="flex items-center justify-center mt-12 relative w-full" 
           onSubmit={handleSubmit}
         >
-          {/* Search Icon */}
           {!isFocused && (
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
               <Image src="/assets/icons/next.svg" alt="Search" width={20} height={20} />
             </div>
           )}
 
-          {/* Input Field */}
+          {/* Adding onFocus with delay */}
           <input 
             type="text"
             value={searchPrompt}
-            onFocus={() => setIsFocused(true)} // Set focus when clicked
+            onFocus={handleFocusWithDelay} // Adding a 0.5s delay before setting focus
             onChange={(e) => setSearchPrompt(e.target.value)}
             placeholder="Search"
             className="pl-12 pr-4 py-2 w-full rounded-full border border-white focus:outline-none text-white bg-black placeholder-white"
           />
 
-          {/* Submit Button */}
           <button 
             type="submit" 
             className="hidden"
