@@ -1,7 +1,6 @@
 <div align="center">
   <br />
-    <a href="https://youtu.be/lh9XVGv6BHs?si=BquPyhI_o2f8jHqV" target="_blank">
-      <img src="https://github.com/adrianhajdin/pricewise/assets/151519281/315377f2-0307-4ac2-87e0-55e053ca094b" alt="Project Banner">
+   
     </a>
   <br />
 
@@ -32,12 +31,7 @@ Make sure you have the following installed on your machine:
 - [Node.js](https://nodejs.org/en)
 - [npm](https://www.npmjs.com/) (Node Package Manager)
 
-**Cloning the Repository**
 
-```bash
-git clone https://github.com/adrianhajdin/pricewise.git
-cd pricewise
-```
 
 **Installation**
 
@@ -49,22 +43,11 @@ npm install
 
 **Set Up Environment Variables**
 
-Create a new file named `.env` in the root of your project and add the following content:
+Create a new file named `.env` in the root of your project
 
-```env
-#SCRAPER
-BRIGHT_DATA_USERNAME=
-BRIGHT_DATA_PASSWORD=
 
-#DB
-MONGODB_URI=
 
-#OUTLOOK
-EMAIL_USER=
-EMAIL_PASS=
-```
-
-Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up on these specific websites from [BrightData](https://brightdata.com/), [MongoDB](https://www.mongodb.com/), and [Node Mailer](https://nodemailer.com/)
+Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up on these specific websites from [BrightData](https://brightdata.com/), ect
 
 **Running the Project**
 
