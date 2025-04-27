@@ -1,0 +1,40 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Gender {
+  MEN
+  WOMEN
+  UNISEX
+}
+
+enum Category {
+  TSHIRT
+  SHIRT
+  JUMPER
+  JACKET
+  DRESS
+  PANTS
+  SHORTS
+  SKIRT
+}
+
+model Item {
+  id        String   @id @default(uuid())
+  name      String
+  category  Category
+  gender    Gender
+  brand     String
+  price     Float
+  imageUrl  String
+  color     String?
+
+  @@index([category, gender])
+}
